@@ -141,7 +141,9 @@ class SSHKey(RulesModel):
     owner: models.ForeignKey = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="sshkeys", default=None
     )
+    title: models.CharField = models.CharField("SSH title",max_length=10, blank=True) 
     key: models.CharField = models.CharField("SSH Key", max_length=1024)
+    date: models.DateTimeField = models.DateField(auto_now_add=True)
 
 
 def validator_disallow_blacklisted_mac(value):
