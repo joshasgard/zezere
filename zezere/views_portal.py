@@ -97,10 +97,9 @@ def remove_ssh_key(request):
 @require_POST
 def add_ssh_key(request):
     keyval = request.POST["sshkey"].strip()
-    if not keyval:
+    titleval = request.POST["sshtitle"]
+    if not (keyval and titleval):
         return redirect("portal_sshkeys")
 
-    key = SSHKey(owner=request.user, key=keyval)
-    key.full_clean()
-    key.save()
+    SSHKey.objects.create(owner=request.user, key=keyval,title=titleval)
     return redirect("portal_sshkeys")

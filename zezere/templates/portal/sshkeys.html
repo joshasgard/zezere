@@ -5,33 +5,48 @@
 {% block title %}SSH Keys{% endblock %}
 
 {% block content %}
-Your SSH Keys:
-<table border="1">
-
-    <tr>
-        <th>Key</th>
-        <th>Actions</th>
-    </tr>
-    {% for sshkey in sshkeys %}
+<div class="container-fluid"> 
+    <div class="row">
+<h1>Your SSH Keys:</h1>
+{% if not sshkeys %}
+    <h3> No SSH key saved.</h3>
+{% else %}
+    <table border="1">
         <tr>
-            <td>{{ sshkey.key }}</td>
-            <td>
-                <form method="POST" action="/portal/sshkeys/delete/">
-                    {% csrf_token %}
-                    <input type="hidden" name="sshkey_id" value="{{ sshkey.id }}">
-                    <input type="submit" value="Delete key">
-                </form>
-            </td>
+            <th>Title</th>
+            <th>Key</th>
+            <th>Date</th>
+            <th>Actions</th> 
         </tr>
-    {% endfor %}
-</table>
+        {% for sshkey in sshkeys %}
+            <tr>
+                <td>{{ sshkey.title }}</td>
+                <td>{{ sshkey.key }}</td>
+                <td>{{ sshkey.date }}</td>
 
-Add a new key:
+                <td>
+                    <form method="POST" action="/portal/sshkeys/delete/">
+                        {% csrf_token %}
+                        <input type="hidden" name="sshkey_id" value="{{ sshkey.id }}">
+                        <input type="submit" value="Delete key">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}    
+</div> <br/>
+<br/>
+<div class="row">
+<h3>Add a new key:</h3>
 <form method="POST" action="/portal/sshkeys/add/">
     {% csrf_token %}
-    Key contents:
-    <textarea name="sshkey"></textarea>
+    Title: <br/>
+    <input type="text" name="sshtitle"><br/>
+    Key contents:<br/>
+    <textarea name="sshkey"></textarea><br/>
     <input type="submit" value="Add key">
 </form>
-
+</div>
+</div>
 {% endblock %}
