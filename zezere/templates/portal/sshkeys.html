@@ -7,46 +7,50 @@
 {% block content %}
 <div class="container-fluid"> 
     <div class="row">
-<h1>Your SSH Keys:</h1>
-{% if not sshkeys %}
-    <h3> No SSH key saved.</h3>
-{% else %}
-    <table border="1">
-        <tr>
-            <th>Title</th>
-            <th>Key</th>
-            <th>Date</th>
-            <th>Actions</th> 
-        </tr>
-        {% for sshkey in sshkeys %}
-            <tr>
-                <td>{{ sshkey.title }}</td>
-                <td>{{ sshkey.key }}</td>
-                <td>{{ sshkey.date }}</td>
+        <h1>Saved SSH Keys</h1>
+        <hr/>
+        {% if not sshkeys %}
+            <h3> No SSH key saved.</h3>
+        {% else %}
+            {% for sshkey in sshkeys %}
+            <div class="panel panel-default container-fluid">
+                <div class="panel-body row">
+                    <div class="col-md-2 col-sm-2 text-muted">
+                        <h3>&#128477;</h3>
+                    </div>
+                    <div class="col-md-8 col-sm-8">
+                        <strong>{{ sshkey.title }} </strong><br/>
+                        <small>   {{ sshkey.key }} </small><br/>
+                        <small class="text-muted">
+                            <em> Added on {{ sshkey.date }}</em></small>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <form method="POST" action="/portal/sshkeys/delete/">
+                            {% csrf_token %}
+                            <input type="hidden" name="sshkey_id" value="{{ sshkey.id }}">
+                            <input class ="btn btn-danger" type="submit" value="Delete key">
+                        </form>
+                    </div>
 
-                <td>
-                    <form method="POST" action="/portal/sshkeys/delete/">
-                        {% csrf_token %}
-                        <input type="hidden" name="sshkey_id" value="{{ sshkey.id }}">
-                        <input type="submit" value="Delete key">
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-{% endif %}    
-</div> <br/>
-<br/>
-<div class="row">
-<h3>Add a new key:</h3>
-<form method="POST" action="/portal/sshkeys/add/">
-    {% csrf_token %}
-    Title: <br/>
-    <input type="text" name="sshtitle"><br/>
-    Key contents:<br/>
-    <textarea name="sshkey"></textarea><br/>
-    <input type="submit" value="Add key">
-</form>
-</div>
+                </div>
+            </div>
+
+            {% endfor %}
+        {% endif %}    
+    </div>
+    <div class="row">
+        <h1>Add new key</h1>
+        <hr/>
+        <form method="POST" action="/portal/sshkeys/add/">
+            {% csrf_token %}
+            Title: <br/>
+            <input type="text" name="sshtitle" placeholder="Add title"><br/>
+            <br/>
+            Key contents:<br/>
+            <textarea name="sshkey"></textarea><br/>
+            <br/>
+            <input class ="btn btn-success" type="submit" value="Add key">
+        </form>
+    </div>
 </div>
 {% endblock %}
